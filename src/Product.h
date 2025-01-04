@@ -8,31 +8,18 @@
 
 class Product {
 public:
-    Product(const std::string& name, double minPrice, double basePrice, double maxPrice) : 
-        name_(name), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice) {}
+    Product(const std::string& name, double minPrice, double basePrice, double maxPrice);
     virtual ~Product() = default;
     // TODO rule of 3/5!! Copy/move constructor/operator.
 
     // virtual double getPrice() const = 0;
     // std::string getName() const { return name_; }
 
-    void print() const {
-        std::cout << this->name_ << " [" << this->minPrice_ << ", " << this->basePrice_ << ", " << this->maxPrice_ << "]" << std::endl;
-    }
-    bool operator==(const Product& rhs) const {
-        return this->name_ == rhs.name_;
-    }
-    void updatePrice(const Product& lastBought) {
-        //std::cout << "Updating price of " << this->name_ << " in thread " << std::this_thread::get_id() << std::endl;
-        //std::this_thread::sleep_for(std::chrono::milliseconds((int)minPrice_*1000));
+    bool operator==(const Product& rhs) const;
 
-        if (*this == lastBought) {
-            this->increasePrice();
-        }
-        else {
-            this->decreasePrice();
-        }
-    }
+    void print() const;
+
+    void updatePrice(const Product& lastBought);
 
 protected:
     std::string name_;
@@ -47,16 +34,8 @@ protected:
     //int stockAmount;
     //std::string stockUnit;
 
-    void increasePrice(double rate = 0.1) {
-        std::cout << "Increasing Price of " << this->name_ << std::endl; 
-        double delta = (this->maxPrice_ - this->minPrice_) * rate;
-        this->basePrice_ = std::min(this->basePrice_ + delta, this->maxPrice_);
-    }
-    void decreasePrice(double rate = 0.1) {
-        std::cout << "Decreasing Price of " << this->name_ << std::endl; 
-        double delta = (this->maxPrice_ - this->minPrice_) * rate;
-        this->basePrice_ = std::max(this->basePrice_ - delta, this->minPrice_);
-    }
+    void increasePrice(double rate = 0.1);
+    void decreasePrice(double rate = 0.1);
 };
 
 #endif
