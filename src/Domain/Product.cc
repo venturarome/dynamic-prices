@@ -1,6 +1,6 @@
 #include "Product.h"
 
-Product::Product(const std::string& name, double minPrice, double basePrice, double maxPrice) :
+Product::Product(std::string name, double minPrice, double basePrice, double maxPrice) :
     name_(name), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice) {}
 
 bool Product::operator==(const Product& rhs) const {

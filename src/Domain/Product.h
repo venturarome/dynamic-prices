@@ -8,7 +8,7 @@
 
 class Product {
 public:
-    Product(const std::string& name, double minPrice, double basePrice, double maxPrice);
+    Product(std::string name, double minPrice, double basePrice, double maxPrice);
     virtual ~Product() = default;
     // TODO rule of 3/5!! Copy/move constructor/operator.
 
@@ -22,7 +22,7 @@ public:
     void updatePrice(const Product& lastBought);
 
 protected:
-    std::string name_;
+    const std::string name_;
 
     // TODO think about creating this as a functor (aka "function object", or "function with state").
     //   Or maybe use a functor to initially determine the delta! https://cplusplus.com/forum/beginner/212316/

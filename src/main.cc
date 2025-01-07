@@ -29,7 +29,7 @@ int main () {
     std::vector<Product> products;
     products.reserve(rawProducts.size());
     for (auto& rawProduct: rawProducts) {
-        Product p(rawProduct[0], std::stof(rawProduct[1]), std::stof(rawProduct[2]), std::stof(rawProduct[3]));
+        Product p(rawProduct[0], std::stod(rawProduct[1]), std::stod(rawProduct[2]), std::stod(rawProduct[3]));
         products.push_back(p);
         p.print();
     }
