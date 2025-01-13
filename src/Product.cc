@@ -1,16 +1,28 @@
 #include "Product.h"
 
-Product::Product(std::string name, double minPrice, double basePrice, double maxPrice) :
-    name_(name), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice) {}
+Product::Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice) :
+    name_(name), ticker_(ticker), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice)/*, priceHistory_()*/ {}
 
 bool Product::operator==(const Product& rhs) const {
     return this->name_ == rhs.name_;
 }
 
 void Product::print() const {
-    std::cout << this->name_ 
-                << " [" << this->minPrice_ << ", " << this->basePrice_ << ", " << this->maxPrice_ << "]" 
-                << std::endl;
+    std::cout << "(" << this->ticker_ << ") " << this->name_ 
+              << " [" << this->minPrice_ << ", " << this->basePrice_ << ", " << this->maxPrice_ << "]" 
+              << std::endl;
+}
+
+std::string Product::name() const {
+    return this->name_;
+}
+
+std::string Product::ticker() const {
+    return this->ticker_;
+}
+
+double Product::price() const {
+    return this->basePrice_;
 }
 
 void Product::updatePrice(const Product& lastBought) {

@@ -1,85 +1,56 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <memory>
 
+#include "Menu.h"
 #include "Product.h"
-
-void task1(std::string msg)
-{
-    std::cout << "task1 says: " << msg;
-}
+#include "CmdRenderer.h"
+#include "CmdWaiter.h"
 
 int main () {
-    // std::cout << "Hello, Google IDX!" << std::endl;
-        
-    // std::thread t1(task1, "Hello");
-    // t1.join();
 
-    // return 0;
-
+    // TODO consider using a different container (ie. unordered_set, unordered_map, ...).
     std::vector<std::vector<std::string>> rawProducts {
-        {"Estrella Galicia (bottle 330 ml)", "2.00", "3.00", "5.00"},
-        {"Guinness (pint)", "5.00", "6.70", "9.00"},
-        {"Punk IPA (can 330ml)", "3.50", "4.90", "7.50"},
-        {"Paulaner (bottle 500 ml)", "3.90", "5.20", "7.70"},
+        {"Estrella Galicia, bottle 330 ml", "EGA.B.330", "2.00", "3.00", "5.00"},
+        {"Guinness, pint", "GUI.D.P", "5.00", "6.70", "9.00"},
+        {"Punk IPA, can, 330ml", "PK.C.330", "3.50", "4.90", "7.50"},
+        {"Paulaner, bottle, 500 ml", "PAU.B.500", "3.90", "5.20", "7.70"},
     };
     
-    //std::vector<int> producddts(3);   // duda: ¿por qué esta línea sí funciona, pero la siguiente no?
-    //std::vector<Product> products(3);
-    std::vector<Product> products;
-    products.reserve(rawProducts.size());
+
+    // TODO create rules for "tickers".
+    //  ie. <ABBREVIATION OF NAME>.<CONTAINER(B:bottle|C:can|D:draught|...)>.<QUANTITY(330:330ml|P:pint|HP:half pint|...)>
+    //
+    // A "generic product" with its own ticker will be already created.
+    // On the creation of each menu, the owner will select which products to add,
+    // or alternatively it can create new (private) products.
+
+    auto menu = std::make_unique<Menu>("Beers");
     for (auto& rawProduct: rawProducts) {
-        Product p(rawProduct[0], std::stod(rawProduct[1]), std::stod(rawProduct[2]), std::stod(rawProduct[3]));
-        products.push_back(p);
-        p.print();
-    }
-    
-    std::cout << std::endl;
-    
-    // TODO: when adding concurrency, use the M&M rule ("mutable and mutex go together"): https://www.youtube.com/watch?v=oxFgclFElnM&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L&index=101
-    Product& lastPurchasedProduct = std::ref(products.at(2));
-    std::vector<std::thread> threads;
-    for (auto& product: products) {
-        //product.updatePrice(lastPurchasedProduct);
-        threads.push_back(
-            std::thread(&Product::updatePrice, &product, lastPurchasedProduct)
+        //auto product = std::make_unique<Product>(
+        Product product = Product(
+            rawProduct[0], 
+            rawProduct[1],
+            std::stod(rawProduct[2]), 
+            std::stod(rawProduct[3]), 
+            std::stod(rawProduct[4])
         );
+        menu->addProduct(std::move(product));
     }
 
-    for (auto& thread: threads) {
-        thread.join();
-    }
+// todo: create MenuCmdRenderer, as we can render other things apart from a menu.
+    auto renderer = std::make_unique<CmdRenderer>();
+    renderer->render(menu);
+    std::cout << std::string(15, '=') << std::endl;
 
-    
-    std::cout << std::endl;
-    
-    for (auto& product: products) {
-        product.print();
-    }
-    
-    return 0;
-    
-    
+    auto waiter = std::make_unique<CmdWaiter>();
     bool closeTime = false;
-    int numOrders = 0;
     while (!closeTime) {
-        std::string beerOrder;
-        std::cout << "Next order! What do you want? " << std::endl
-            << "  (1) Estrella Galicia" << std::endl
-            << "  (2) Mahou" << std::endl
-            << "  (3) Guiness" << std::endl
-            << "  (0) Time to close" << std::endl;
-        std::getline(std::cin, beerOrder);
-        
-        if (0 == std::stoi(beerOrder)) {
-            closeTime = true;
-            std::cout << "Time to close" << std::endl;
-        }
-        else {
-            numOrders++;
-            std::cout << "You ordered " << numOrders << " times" << std::endl;
-        }
+        closeTime = waiter->takeOrder(menu);
+        renderer->render(menu);
     }
-        
+    std::cout << "Time to close" << std::endl;
+    
     return 0;
 }
