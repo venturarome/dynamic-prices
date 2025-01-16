@@ -10,7 +10,7 @@
 
 class CmdWaiter: public Waiter {
     public:
-    bool takeOrder(std::unique_ptr<Menu>& menu) override;
+    bool takeOrder(const std::shared_ptr<Menu> menu) override;
 };
 
 #endif // CMDWAITER_H

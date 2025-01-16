@@ -5,15 +5,12 @@
 #include "CmdWaiter.h"
 #include "Menu.h"
 
-bool CmdWaiter::takeOrder(std::unique_ptr<Menu>& menu) {
+bool CmdWaiter::takeOrder(const std::shared_ptr<Menu> menu) {
 
     std::string order;
     std::cout << std::endl << "Next order! What do you want? " << std::endl;
-
-    for (const auto& product: menu->products()) {
-        std::cout << "  (" << product.ticker() << ") " << product.name() << ": " << product.price() << " EUR" << std::endl;
-    }
-    std::cout << "  (0) Time to close" << std::endl;
+    menu->render();
+    std::cout << "   (0) Time to close" << std::endl;
 
     std::getline(std::cin, order);
     std::cout << std::endl;
