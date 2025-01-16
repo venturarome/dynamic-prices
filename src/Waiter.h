@@ -7,7 +7,7 @@
 
 class Waiter {
     public:
-    virtual bool takeOrder(std::unique_ptr<Menu>& menu) = 0;
+    virtual bool takeOrder(const std::shared_ptr<Menu> menu) = 0;
 };
 
 #endif // WAITER_H

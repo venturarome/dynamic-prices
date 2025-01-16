@@ -3,10 +3,12 @@
 
 #include <memory>
 
-class Menu;
+#include "Renderable.h"
 
 class Renderer {
-    virtual void render(const std::unique_ptr<Menu>& menu) = 0;
+public:
+    void render(const std::vector<std::shared_ptr<const Renderable>>& objects);
+    void render(const std::shared_ptr<const Renderable>& object);
 };
 
 #endif // RENDERER_H

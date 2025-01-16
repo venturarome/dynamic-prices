@@ -1,26 +1,25 @@
 #ifndef PRODUCT_H
 #define PRODUCT_H
 
-#include <string>
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
+
+#include "Renderable.h"
+#include "RenderStrategy.h"
 
 // https://en.cppreference.com/w/cpp/chrono/time_point/time_point
 /*using DatedPrice = std::pair<std::chrono::time_point<std::chrono::steady_clock>, double>;*/
 
-class Product {
+class Product: public Renderable {
 public:
-    Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice);
+    Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice, std::shared_ptr<RenderStrategy>renderService = nullptr);
     virtual ~Product() = default;
     // TODO rule of 3/5!! Copy/move constructor/operator.
 
-    // virtual double getPrice() const = 0;
-    // std::string getName() const { return name_; }
-
     bool operator==(const Product& rhs) const;
-
-    void print() const;
 
     std::string name() const;
     std::string ticker() const;
@@ -31,6 +30,14 @@ public:
 protected:
     const std::string name_;
 
+    // TODO create rules for "tickers".
+    //  ie. <ABBREVIATION OF NAME>.<CONTAINER(B:bottle|C:can|D:draught|...)>.<QUANTITY(330:330ml|P:pint|HP:half pint|...)>
+    // CONTAINER may apply only to Beverage. We may have SIZE (S, M, L, XL) for both Beverage and Meal.
+    // ==> Use of enums.
+
+    // Idea: A "generic product" with its own ticker will be already created.
+    // On the creation of each menu, the owner will select which products to add,
+    // or alternatively it can create new (private) products.
     const std::string ticker_;
 
     // TODO think about creating this as a functor (aka "function object", or "function with state").

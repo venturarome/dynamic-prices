@@ -1,16 +1,10 @@
 #include "Product.h"
 
-Product::Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice) :
-    name_(name), ticker_(ticker), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice)/*, priceHistory_()*/ {}
+Product::Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice, std::shared_ptr<RenderStrategy>renderService)
+    : Renderable(renderService), name_(name), ticker_(ticker), minPrice_(minPrice), basePrice_(basePrice), maxPrice_(maxPrice)/*, priceHistory_()*/ {}
 
 bool Product::operator==(const Product& rhs) const {
     return this->name_ == rhs.name_;
-}
-
-void Product::print() const {
-    std::cout << "(" << this->ticker_ << ") " << this->name_ 
-              << " [" << this->minPrice_ << ", " << this->basePrice_ << ", " << this->maxPrice_ << "]" 
-              << std::endl;
 }
 
 std::string Product::name() const {
@@ -37,6 +31,7 @@ void Product::updatePrice(const Product& lastBought) {
     }
 }
 
+// TODO use strategy pattern to allow different ways to update/decrease price!
 void Product::increasePrice(double rate) {
     std::cout << "Increasing Price of " << this->name_ << std::endl; 
     double delta = (this->maxPrice_ - this->minPrice_) * rate;

@@ -7,11 +7,12 @@
 #include <stdexcept>
 
 #include "Product.h"
-#include "Renderer.h"
+#include "Renderable.h"
 
-class Menu {
+class Menu: public Renderable {
     public:
-    Menu(std::string name): products_(), name_(name) {}
+    Menu(std::string name, std::shared_ptr<RenderStrategy>renderService = nullptr)
+        : Renderable(renderService), products_(), name_(name) {}
 
     void addProduct(Product&& product) {
         products_.push_back(product);
@@ -35,18 +36,21 @@ class Menu {
         throw std::invalid_argument("Product with supplied ticker does not exist");
     }
 
-    void printProducts() const {
-        for (auto& product: products_) {
-            product.print();
-        }
+    std::string name() const {
+        return name_;
     }
 
     std::vector<Product>& products() {
         return products_;
     }
 
+    const std::vector<Product>& products() const {
+        return products_;
+    }
+
     private:
-    std::vector<Product> products_;  // TODO: maybe it's more efficient to have a vector of smart pointers to products, or a map.
+    // TODO: maybe it's more efficient to have a vector of smart pointers to products, or a different container (ie. unordered_set, unordered_map, ...).
+    std::vector<Product> products_;
     const std::string name_;
 };
 
