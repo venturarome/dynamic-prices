@@ -2,8 +2,10 @@
 #include <thread>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <memory>
 
+#include "ArgsParser.h"
 #include "CmdWaiter.h"
 #include "CsvReader.h"
 #include "Menu.h"
@@ -12,16 +14,32 @@
 #include "RenderProductCmdStrategy.h"
 #include "Renderer.h"
 
-int main () {
+int main (int argc, char* argv[]) {
+
+    std::unordered_map<std::string, std::string> args = ArgsParser::parse(argc, argv);
+
     auto reader = std::make_unique<CsvReader>();
     std::vector<std::map<std::string, std::string>> rawProducts = reader->read("./data/beers.csv");
     
     auto renderer = std::make_unique<Renderer>();
 
-    auto renderMenuService = std::make_shared<RenderMenuCmdStrategy>();
+    std::shared_ptr<RenderStrategy> renderMenuService;
+    std::shared_ptr<RenderStrategy> renderProductService;
+    if (args.contains("ui") && args["ui"] == "gui") {
+        // WIP
+        //auto renderMenuService = std::make_shared<RenderMenuGuiStrategy>();
+        //auto renderProductService = std::make_shared<RenderProductGuiStrategy>();
+        // For the time being:
+        renderMenuService = std::make_shared<RenderMenuCmdStrategy>();
+        renderProductService = std::make_shared<RenderProductCmdStrategy>();
+    }
+    else { // (args["ui"] == "cmd")
+        renderMenuService = std::make_shared<RenderMenuCmdStrategy>();
+        renderProductService = std::make_shared<RenderProductCmdStrategy>();
+    }
+
     auto menu = std::make_shared<Menu>("Beers", renderMenuService);
     
-    auto renderProductService = std::make_shared<RenderProductCmdStrategy>();
     for (auto& rawProduct: rawProducts) {
         //auto product = std::make_unique<Product>(
         Product product(
