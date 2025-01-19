@@ -1,3 +1,4 @@
+#include <format>
 #include <iostream>
 #include <memory>
 
@@ -10,7 +11,7 @@ void RenderMenuCmdStrategy::render(const Renderable& object) const {
     const Menu& menu = dynamic_cast<const Menu&>(object);
 
     std::cout << std::string(15, '=') << std::endl;
-    std::cout << "Menu: \"" << menu.name() << "\"" << std::endl;
+    std::cout << std::format("Menu: '{}'", menu.name()) << std::endl;
     for (const auto& product: menu.products()) {
         std::cout << "   ";
         product.render();

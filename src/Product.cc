@@ -33,12 +33,12 @@ void Product::updatePrice(const Product& lastBought) {
 
 // TODO use strategy pattern to allow different ways to update/decrease price!
 void Product::increasePrice(double rate) {
-    std::cout << "Increasing Price of " << this->name_ << std::endl; 
+    //std::cout << "Increasing Price of " << this->name_ << std::endl; 
     double delta = (this->maxPrice_ - this->minPrice_) * rate;
     this->basePrice_ = std::min(this->basePrice_ + delta, this->maxPrice_);
 }
 void Product::decreasePrice(double rate) {
-    std::cout << "Decreasing Price of " << this->name_ << std::endl; 
+    //std::cout << "Decreasing Price of " << this->name_ << std::endl; 
     double delta = (this->maxPrice_ - this->minPrice_) * rate;
     this->basePrice_ = std::max(this->basePrice_ - delta, this->minPrice_);
 }
