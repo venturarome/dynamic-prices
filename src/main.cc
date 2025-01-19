@@ -4,6 +4,7 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
+#include <string>
 
 #include "ArgsParser.h"
 #include "CmdWaiter.h"
@@ -14,6 +15,7 @@
 #include "RenderMenuCmdStrategy.h"
 #include "RenderProductCmdStrategy.h"
 #include "Renderer.h"
+#include "Stock.h"
 
 int main (int argc, char* argv[]) {
 
@@ -51,6 +53,7 @@ int main (int argc, char* argv[]) {
                 std::stod(rawProduct["minPrice"]),
                 std::stod(rawProduct["maxPrice"])
             ),
+            Stock(std::stoi(rawProduct["stock"])),
             renderProductService
         );
         menu->addProduct(std::move(product));

@@ -1,5 +1,5 @@
-name;ticker;minPrice;basePrice;maxPrice
-Estrella Galicia, bottle 330 ml;EGA.B.330;2.00;3.00;5.00
-Guinness, pint;GUI.D.P;5.00;6.70;9.00
-Punk IPA, can, 330ml;PK.C.330;3.50;4.90;7.50
-Paulaner, bottle, 500 ml;PAU.B.500;3.90;5.20;7.70
+name;ticker;minPrice;basePrice;maxPrice;stock
+Estrella Galicia, bottle 330 ml;EGA.B.330;2.00;3.00;5.00;20
+Guinness, pint;GUI.D.P;5.00;6.70;9.00;7
+Punk IPA, can, 330ml;PK.C.330;3.50;4.90;7.50;2
+Paulaner, bottle, 500 ml;PAU.B.500;3.90;5.20;7.70;42

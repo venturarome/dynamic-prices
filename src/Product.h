@@ -10,6 +10,7 @@
 #include "Price.h"
 #include "Renderable.h"
 #include "RenderStrategy.h"
+#include "Stock.h"
 //#include "Updatable.h"
 //#include "UpdateStrategy.h"
 
@@ -22,6 +23,7 @@ public:
       std::string name,
       std::string ticker,
       Price price,
+      Stock stock,
       std::shared_ptr<RenderStrategy> renderService = nullptr //,
       //std::shared_ptr<UpdateStrategy> updateService = nullptr
     );
@@ -33,6 +35,7 @@ public:
     std::string name() const;
     std::string ticker() const;
     double price() const;
+    int stock() const;
 
     void updatePrice(const Product& lastBought);
 
@@ -50,6 +53,7 @@ protected:
     const std::string ticker_;
 
     Price price_;
+    Stock stock_;
 
     // https://en.cppreference.com/w/cpp/chrono/time_point/time_point
   /*  std::vector<DatedPrice> priceHistory_;  */

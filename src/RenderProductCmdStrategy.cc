@@ -7,5 +7,5 @@
 
 void RenderProductCmdStrategy::render(const Renderable& object) const {
     const Product& product = dynamic_cast<const Product&>(object);
-    std::cout << std::format("({}) {}: {} EUR", product.ticker(), product.name(), product.price()) << std::endl;
+    std::cout << std::format("({}) {}: {} EUR, {} units", product.ticker(), product.name(), product.price(), product.stock()) << std::endl;
 }

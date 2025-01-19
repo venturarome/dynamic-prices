@@ -4,13 +4,15 @@ Product::Product(
     std::string name,
     std::string ticker,
     Price price,
+    Stock stock,
     std::shared_ptr<RenderStrategy> renderService //,
     //std::shared_ptr<UpdateStrategy> updateService
 ) : Renderable(renderService),
     //Updatable(updateService),
     name_(name),
     ticker_(ticker),
-    price_(price)
+    price_(price),
+    stock_(stock)
     /*, priceHistory_()*/ 
 {}
 
@@ -30,6 +32,10 @@ double Product::price() const {
     return this->price_.base();
 }
 
+int Product::stock() const {
+    return this->stock_.units();
+}
+
 
 // TODO use strategy pattern to allow different ways to update/decrease price!
 void Product::updatePrice(const Product& lastBought) {
@@ -39,6 +45,7 @@ void Product::updatePrice(const Product& lastBought) {
     if (*this == lastBought) {
         //this->increasePrice();
         this->price_.increaseRangePercentage();
+        this->stock_.consume(1);
     }
     else {
         //this->decreasePrice();
