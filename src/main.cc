@@ -9,6 +9,7 @@
 #include "CmdWaiter.h"
 #include "CsvReader.h"
 #include "Menu.h"
+#include "Price.h"
 #include "Product.h"
 #include "RenderMenuCmdStrategy.h"
 #include "RenderProductCmdStrategy.h"
@@ -45,9 +46,11 @@ int main (int argc, char* argv[]) {
         Product product(
             rawProduct["name"],
             rawProduct["ticker"],
-            std::stod(rawProduct["minPrice"]),
-            std::stod(rawProduct["basePrice"]),
-            std::stod(rawProduct["maxPrice"]),
+            Price(
+                std::stod(rawProduct["basePrice"]),
+                std::stod(rawProduct["minPrice"]),
+                std::stod(rawProduct["maxPrice"])
+            ),
             renderProductService
         );
         menu->addProduct(std::move(product));

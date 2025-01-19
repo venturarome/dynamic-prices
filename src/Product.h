@@ -7,15 +7,24 @@
 #include <string>
 #include <thread>
 
+#include "Price.h"
 #include "Renderable.h"
 #include "RenderStrategy.h"
+//#include "Updatable.h"
+//#include "UpdateStrategy.h"
 
 // https://en.cppreference.com/w/cpp/chrono/time_point/time_point
 /*using DatedPrice = std::pair<std::chrono::time_point<std::chrono::steady_clock>, double>;*/
 
-class Product: public Renderable {
+class Product: public Renderable/*, Updatable*/ {
 public:
-    Product(std::string name, std::string ticker, double minPrice, double basePrice, double maxPrice, std::shared_ptr<RenderStrategy>renderService = nullptr);
+    Product(
+      std::string name,
+      std::string ticker,
+      Price price,
+      std::shared_ptr<RenderStrategy> renderService = nullptr //,
+      //std::shared_ptr<UpdateStrategy> updateService = nullptr
+    );
     virtual ~Product() = default;
     // TODO rule of 3/5!! Copy/move constructor/operator.
 
@@ -40,12 +49,7 @@ protected:
     // or alternatively it can create new (private) products.
     const std::string ticker_;
 
-    // TODO think about creating this as a functor (aka "function object", or "function with state").
-    //   Or maybe use a functor to initially determine the delta! https://cplusplus.com/forum/beginner/212316/
-    // TODO other option: create a class and overload the ++/-- operators.
-    const double minPrice_;
-    double basePrice_;
-    const double maxPrice_;
+    Price price_;
 
     // https://en.cppreference.com/w/cpp/chrono/time_point/time_point
   /*  std::vector<DatedPrice> priceHistory_;  */
@@ -53,9 +57,6 @@ protected:
 
     //int stockAmount;
     //std::string stockUnit;
-
-    void increasePrice(double rate = 0.1);
-    void decreasePrice(double rate = 0.1);
 };
 
 #endif // PRODUCT_H
