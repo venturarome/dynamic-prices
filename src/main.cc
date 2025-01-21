@@ -11,6 +11,7 @@
 #include "CsvReader.h"
 #include "Menu.h"
 #include "Price.h"
+#include "PriceRecorder.h"
 #include "Product.h"
 #include "RenderMenuCmdStrategy.h"
 #include "RenderProductCmdStrategy.h"
@@ -42,7 +43,6 @@ int main (int argc, char* argv[]) {
     }
 
     auto menu = std::make_shared<Menu>("Beers", renderMenuService);
-    
     for (auto& rawProduct: rawProducts) {
         //auto product = std::make_unique<Product>(
         Product product(
@@ -58,6 +58,8 @@ int main (int argc, char* argv[]) {
         );
         menu->addProduct(std::move(product));
     }
+
+    auto priceRecorder = std::make_unique<PriceRecorder>(menu);
 
     renderer->render(menu);
 
