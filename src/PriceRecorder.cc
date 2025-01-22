@@ -1,11 +1,13 @@
+#include "PriceRecorder.h"
+
 #include <cstdio>
+#include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <memory>
 #include <vector>
 
 #include "Menu.h"
-#include "PriceRecorder.h"
 
 PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu) {
     std::string dirPath = "./data/historical";
@@ -27,7 +29,11 @@ PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu) {
                 }
 
                 while (!sToken.stop_requested()) {
-                    outfile << product.ticker() << "," << product.price() << "," << product.stock() << std::endl;
+                    // TODO we could have the timestamp in shared memory. We'd need to use mutexes!
+                    std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
+                    auto secondsSinceEpoch = std::chrono::duration_cast<std::chrono::seconds>(tpNow.time_since_epoch()).count();
+
+                    outfile << secondsSinceEpoch << "," << product.ticker() << "," << product.price() << "," << product.stock() << std::endl;
                     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
                 }
 
