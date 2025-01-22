@@ -20,6 +20,11 @@ int main () {
     const std::chrono::system_clock::time_point recovered_t_sc  = std::chrono::system_clock::from_time_t(t_sc_t);
     std::cout << "Converted back to timepoint: " << recovered_t_sc << std::endl;
 
+    const auto t_sc_s = std::chrono::duration_cast<std::chrono::seconds>(t_sc.time_since_epoch());
+    std::cout << "Time since epoch (in s)    : " << t_sc_s.count() << std::endl;
+    const auto t_sc_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t_sc.time_since_epoch());
+    std::cout << "Time since epoch (in ms)   : " << t_sc_ms.count() << std::endl;
+
 
     std::cout << std::endl << "*** HIGH RESOLUTION CLOCK ***\nIt is one of either steady_clock or system_clock" << std::endl;
     std::chrono::high_resolution_clock::time_point t_hrc = std::chrono::high_resolution_clock::now();
@@ -27,12 +32,13 @@ int main () {
 
 
     std::cout << std::endl << "*** TAI CLOCK ***" << std::endl;
-    std::chrono::high_resolution_clock::time_point t_tai = std::chrono::high_resolution_clock::now();
+    std::chrono::tai_clock::time_point t_tai = std::chrono::tai_clock::now();
     std::cout << "Tai clock time point       : " << t_tai << std::endl;
 
 
     std::cout << std::endl << "*** STEADY CLOCK ***" << std::endl;
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+    //std::cout << "Steady clock time point    : " << t2 << std::endl;  // this fails because there is no conversion available.
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_span_s = std::chrono::duration_cast<std::chrono::duration<double>>(t3 - t2);
