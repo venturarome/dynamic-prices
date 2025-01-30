@@ -1,7 +1,8 @@
 #ifndef PRICERECORDER_H
 #define PRICERECORDER_H
 
-#include <memory>
+#include <semaphore>
+#include <thread>
 #include <vector>
 
 #include "Menu.h"
@@ -15,12 +16,22 @@ class PriceRecorder {
     PriceRecorder(const PriceRecorder&) = delete;
     PriceRecorder& operator=(const PriceRecorder&) = delete;
 
-    // Move semantics - move constructor and move assignment operator ensure right ownership transfer
-    PriceRecorder(PriceRecorder&& other) noexcept;
-    PriceRecorder& operator=(PriceRecorder&& other) noexcept;
+    // Move semantics - move constructor and move assignment operator are disabled
+    PriceRecorder(PriceRecorder&& other) = delete;
+    PriceRecorder& operator=(PriceRecorder&& other) = delete;
 
     private:
-    std::vector<std::jthread> threads_;
+    std::jthread coordinator_;
+    std::vector<std::jthread> workers_;
+
+    long int timestamp_;
+    std::binary_semaphore pendingWork_;
+
+    // std::mutex timestampMutex_;
+    // std::condition_variable timestampCondition_;
+    // /*std::chrono::seconds*/ long int timestamp_;
+    // bool timestampUpdated_;
+    // int timestampAccesses_;
 };
 
 #endif // PRICERECORDER_H

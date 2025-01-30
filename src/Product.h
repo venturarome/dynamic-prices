@@ -14,8 +14,6 @@
 //#include "Updatable.h"
 //#include "UpdateStrategy.h"
 
-// https://en.cppreference.com/w/cpp/chrono/time_point/time_point
-/*using DatedPrice = std::pair<std::chrono::time_point<std::chrono::steady_clock>, double>;*/
 
 class Product: public Renderable/*, Updatable*/ {
 public:
@@ -47,20 +45,10 @@ protected:
     // CONTAINER may apply only to Beverage. We may have SIZE (S, M, L, XL) for both Beverage and Meal.
     // ==> Use of enums.
 
-    // Idea: A "generic product" with its own ticker will be already created.
-    // On the creation of each menu, the owner will select which products to add,
-    // or alternatively it can create new (private) products.
     const std::string ticker_;
 
     Price price_;
     Stock stock_;
-
-    // https://en.cppreference.com/w/cpp/chrono/time_point/time_point
-  /*  std::vector<DatedPrice> priceHistory_;  */
-    // Alternative: cool stuff but way out of scope: https://medium.com/@angus88toms/time-series-analysis-forecasting-in-c-9c7d991850fc
-
-    //int stockAmount;
-    //std::string stockUnit;
 };
 
 #endif // PRODUCT_H

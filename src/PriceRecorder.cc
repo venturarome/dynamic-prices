@@ -5,19 +5,42 @@
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <semaphore>
+#include <thread>
 #include <vector>
 
 #include "Menu.h"
 
-PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu) {
+PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu): pendingWork_{0} {
+    // Periodically records each product's price into separate files in the same folder.
+    // Each file is accessed by an independent thread, which track a single product.
+    // On each update, a shared timer variable is updated so all threads use the same timestamp.
+    //
+    // ASSUMPTION 1: worker_'s processing time is greater than the time taken to have all workers started.
+    // ASSUMPTION 2: coordinator_'s sleep is greater than any worker_'s processing time.
+    
+    coordinator_ = std::jthread([this](std::stop_token sToken){
+        while (!sToken.stop_requested()) {
+            // Sleep for a while
+            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
+            // Do his job: update timestamp
+            std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
+            this->timestamp_ = std::chrono::duration_cast<std::chrono::seconds>(tpNow.time_since_epoch()).count();
+
+            // Signal workers to resume their job
+            this->pendingWork_.release(this->workers_.size());
+        }
+    });
+
     std::string dirPath = "./data/historical";
     if (!std::filesystem::exists(dirPath)) {
         std::filesystem::create_directories(dirPath);
     }
 
     for (const auto& product : menu->products()) {
-        threads_.push_back(
-            std::jthread([&product, dirPath](std::stop_token sToken){
+        workers_.push_back(
+            std::jthread([&product, dirPath, this](std::stop_token sToken){
                 std::string filename = dirPath + "/" + product.ticker() + ".csv";
 
                 remove(filename.c_str());
@@ -29,12 +52,12 @@ PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu) {
                 }
 
                 while (!sToken.stop_requested()) {
-                    // TODO we could have the timestamp in shared memory. We'd need to use mutexes!
-                    std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
-                    auto secondsSinceEpoch = std::chrono::duration_cast<std::chrono::seconds>(tpNow.time_since_epoch()).count();
+                    // Register access to the timestamp
+                    this->pendingWork_.acquire();
 
-                    outfile << secondsSinceEpoch << "," << product.ticker() << "," << product.price() << "," << product.stock() << std::endl;
-                    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+                    // Do its stuff
+                    outfile << this->timestamp_ << "," << product.ticker() << "," << product.price() << "," << product.stock() << std::endl;
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 }
 
                 outfile.close();
@@ -44,16 +67,8 @@ PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu) {
 }
 
 PriceRecorder::~PriceRecorder() {
-    for (auto& thread : threads_) {
-        thread.request_stop();
-        thread.join();      // TODO test if this is really needed (they are "J"threads).
+    for (auto& worker : workers_) {
+        worker.request_stop();
     }
-}
-
-PriceRecorder::PriceRecorder(PriceRecorder&& other) noexcept : threads_(std::move(other.threads_)) {}
-PriceRecorder& PriceRecorder::operator=(PriceRecorder&& other) noexcept {
-    if (this != &other) {
-        threads_ = std::move(other.threads_);
-    }
-    return *this;
+    coordinator_.request_stop();
 }
