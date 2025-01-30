@@ -28,6 +28,7 @@ This represents a demo scenario, not a production-ready project. It can be consi
 ## Other features
 - **SOLID principles**: Revolving into a more maintainable and scalable codebase.
 - **Strategy pattern**: Allowing to select and switch among custom pricing strategies.
+- **Command line tool**: Parse of arguments for a more advanced usage of the program.
 
 ## Getting Started
 To get started with Dynamic Prices, follow these steps:
@@ -57,3 +58,5 @@ Contributions are welcome! Create a pull request and it will be reviewed.
 
 ## License
 This project is licensed under the MIT License.
+
+[Back to top](#dynamic-prices)
