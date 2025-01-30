@@ -22,6 +22,7 @@ This represents a demo scenario, not a production-ready project. It can be consi
 - **STL (Standard Template Library)**: Leveraged for advanced data manipulation and algorithmic operations.
 - **Smart Pointers**: Employed to manage memory more effectively and prevent memory leaks (example of the RAII rule).
 - **Concurrency**: Used to enable parallel processing and improve performance. Not limited to threads and joinable threads, but also to its coordination through semaphores/mutexes.
+- **Timers**: As a mean of coordinating threads and logging price history.
 - **Formatting library**: Used for pretty-printing.
 - **File streams**: for file reading and writing.
 
