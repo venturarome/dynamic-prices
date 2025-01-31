@@ -13,10 +13,11 @@
 #include "Price.h"
 #include "PriceRecorder.h"
 #include "Product.h"
+#include "Renderer.h"
 #include "RenderMenuCmdStrategy.h"
 #include "RenderProductCmdStrategy.h"
-#include "Renderer.h"
 #include "Stock.h"
+#include "UpdateStockUnitStrategy.h"
 
 int main (int argc, char* argv[]) {
 
@@ -42,6 +43,8 @@ int main (int argc, char* argv[]) {
         renderProductService = std::make_shared<RenderProductCmdStrategy>();
     }
 
+    std::shared_ptr<UpdateStrategy> updateProductService = std::make_shared<UpdateStockUnitStrategy>();; 
+
     auto menu = std::make_shared<Menu>("Beers", renderMenuService);
     for (auto& rawProduct: rawProducts) {
         //auto product = std::make_unique<Product>(
@@ -54,7 +57,8 @@ int main (int argc, char* argv[]) {
                 std::stod(rawProduct["maxPrice"])
             ),
             Stock(std::stoi(rawProduct["stock"])),
-            renderProductService
+            renderProductService,
+            updateProductService
         );
         menu->addProduct(std::move(product));
     }

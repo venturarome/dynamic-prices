@@ -15,7 +15,9 @@ class Menu: public Renderable {
 
     bool containsTicker(std::string ticker);
 
-    Product& findbyTicker(std::string ticker);
+    Product& findByTicker(std::string ticker);
+
+    bool hasEnoughStock(std::string ticker);
 
     std::string name() const;
 

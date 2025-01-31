@@ -5,15 +5,14 @@ Product::Product(
     std::string ticker,
     Price price,
     Stock stock,
-    std::shared_ptr<RenderStrategy> renderService //,
-    //std::shared_ptr<UpdateStrategy> updateService
+    std::shared_ptr<RenderStrategy> renderService,
+    std::shared_ptr<UpdateStrategy> updateService
 ) : Renderable(renderService),
-    //Updatable(updateService),
+    Updatable(updateService),
     name_(name),
     ticker_(ticker),
     price_(price),
     stock_(stock)
-    /*, priceHistory_()*/ 
 {}
 
 bool Product::operator==(const Product& rhs) const {
@@ -32,24 +31,14 @@ double Product::price() const {
     return this->price_.base();
 }
 
+bool Product::hasEnoughStock(int units) const {
+    return this->stock_.units() >= units;
+}
+
 int Product::stock() const {
     return this->stock_.units();
 }
 
-
-// TODO use strategy pattern to allow different ways to update/decrease price!
-void Product::updatePrice(const Product& lastBought) {
-    //std::cout << "Updating price of " << this->name_ << " in thread " << std::this_thread::get_id() << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds((int)minPrice_*1000));
-
-    if (*this == lastBought) {
-        //this->increasePrice();
-        this->price_.increaseRangePercentage();
-        this->stock_.consume(1);
-    }
-    else {
-        //this->decreasePrice();
-        this->price_.decreaseRangePercentage();
-
-    }
+void Product::updateStock(int units) {
+    units > 0 ? this->stock_.restock(units) : this->stock_.consume(-units);
 }
