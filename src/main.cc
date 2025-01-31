@@ -17,6 +17,7 @@
 #include "RenderMenuCmdStrategy.h"
 #include "RenderProductCmdStrategy.h"
 #include "Stock.h"
+#include "UpdatePriceRangePercentStrategy.h"
 #include "UpdateStockUnitStrategy.h"
 
 int main (int argc, char* argv[]) {
@@ -43,7 +44,7 @@ int main (int argc, char* argv[]) {
         renderProductService = std::make_shared<RenderProductCmdStrategy>();
     }
 
-    std::shared_ptr<UpdateStrategy> updateProductService = std::make_shared<UpdateStockUnitStrategy>();; 
+    std::shared_ptr<UpdateStrategy> updateProductService = std::make_shared<UpdatePriceRangePercentStrategy>();; 
 
     auto menu = std::make_shared<Menu>("Beers", renderMenuService);
     for (auto& rawProduct: rawProducts) {

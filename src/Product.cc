@@ -31,6 +31,14 @@ double Product::price() const {
     return this->price_.base();
 }
 
+void Product::increasePriceRangePercentage(double rate) {
+    this->price_.increaseRangePercentage(rate);
+}
+
+void Product::decreasePriceRangePercentage(double rate) {
+    this->price_.decreaseRangePercentage(rate);
+}
+
 bool Product::hasEnoughStock(int units) const {
     return this->stock_.units() >= units;
 }
