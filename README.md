@@ -7,6 +7,7 @@ Dynamic Prices is a C++ project designed to simulate the management and manipula
 - [Project Status](#project-status)
 - [C++ Features Used](#c-features-used)
 - [Other Features](#other-features)
+- [Possible improvements](#possible-improvements)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -30,6 +31,14 @@ This represents a demo scenario, not a production-ready project. It can be consi
 - **SOLID principles**: Revolving into a more maintainable and scalable codebase.
 - **Strategy pattern**: Allowing to select and switch among custom pricing strategies.
 - **Command line tool**: Parse of arguments for a more advanced usage of the program.
+
+## Possible improvements
+- **Integrate with a GUI**: So far, this is a terminal-based program. It is already prepared to accept different types of renderers.
+- **Orders list in shared memory**: instead of updating prices after each order, it could make sense to update prices in fixed intervals. To do so, past orders should be placed in a shared memory container, and updating strategies should be able to accept several orders for a single update.
+- **Coordination of historic and update**: currently as independent processes, it would make sense to have them synchronized.
+- **Customization of subproducts**: meaning adding specific logic to classes such as `Meal` or `Beverage`.
+- **`Restaurant` entity**: another level of abstraction, which will allow for further customization, ability to have several menus, ...
+- **Restocking**: logic to update prices after restocking.
 
 ## Getting Started
 To get started with Dynamic Prices, follow these steps:
