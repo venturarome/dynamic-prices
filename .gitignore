@@ -1,3 +1,4 @@
 .*
 !.gitignore
 /data/historical/*.csv
+prog
