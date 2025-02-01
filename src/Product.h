@@ -37,6 +37,9 @@ public:
     double price() const;
     void increasePriceRangePercentage(double rate = 0.1);
     void decreasePriceRangePercentage(double rate = 0.1);
+    void toMinPrice();
+    void toBasePrice();
+    void toMaxPrice();
 
     bool hasEnoughStock(int units) const;
     int stock() const;

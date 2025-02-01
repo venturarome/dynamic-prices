@@ -32,7 +32,7 @@ bool Product::tickerIs(const std::string& ticker) const {
 }
 
 double Product::price() const {
-    return this->price_.base();
+    return this->price_.current();
 }
 
 void Product::increasePriceRangePercentage(double rate) {
@@ -41,6 +41,18 @@ void Product::increasePriceRangePercentage(double rate) {
 
 void Product::decreasePriceRangePercentage(double rate) {
     this->price_.decreaseRangePercentage(rate);
+}
+
+void Product::toMinPrice() {
+    this->price_.toMin();
+}
+
+void Product::toBasePrice() {
+    this->price_.toBase();
+}
+
+void Product::toMaxPrice() {
+    this->price_.toMax();
 }
 
 bool Product::hasEnoughStock(int units) const {
