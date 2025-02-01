@@ -30,7 +30,9 @@ public:
     bool operator==(const Product& rhs) const;
 
     std::string name() const;
+
     std::string ticker() const;
+    bool tickerIs(const std::string& ticker) const;
 
     double price() const;
     void increasePriceRangePercentage(double rate = 0.1);

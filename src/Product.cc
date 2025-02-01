@@ -27,6 +27,10 @@ std::string Product::ticker() const {
     return this->ticker_;
 }
 
+bool Product::tickerIs(const std::string& ticker) const {
+    return this->ticker_ == ticker;
+}
+
 double Product::price() const {
     return this->price_.base();
 }

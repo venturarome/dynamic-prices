@@ -18,7 +18,7 @@
 #include "RenderProductCmdStrategy.h"
 #include "Stock.h"
 #include "UpdatePriceRangePercentStrategy.h"
-#include "UpdateStockUnitStrategy.h"
+#include "UpdateStockOnlyStrategy.h"
 
 int main (int argc, char* argv[]) {
 
