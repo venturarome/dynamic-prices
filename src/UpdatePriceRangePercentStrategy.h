@@ -1,5 +1,5 @@
-#ifndef UPDATEPRICERANGESTRATEGY_H
-#define UPDATEPRICERANGESTRATEGY_H
+#ifndef UPDATEPRICERANGEPERCENTSTRATEGY_H
+#define UPDATEPRICERANGEPERCENTSTRATEGY_H
 
 #include "Order.h"
 #include "UpdateStrategy.h"
@@ -14,4 +14,4 @@ class UpdatePriceRangePercentStrategy: public UpdateStrategy {
     float percentDown_;
 };
 
-#endif // UPDATEPRICERANGESTRATEGY_H
+#endif // UPDATEPRICERANGEPERCENTSTRATEGY_H
