@@ -19,17 +19,30 @@ PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu): pendingWork_{0} {
     // ASSUMPTION 1: worker_'s processing time is greater than the time taken to have all workers started.
     // ASSUMPTION 2: coordinator_'s sleep is greater than any worker_'s processing time.
     
-    coordinator_ = std::jthread([this](std::stop_token sToken){
+    size_t numProducts = menu->products().size();
+
+    coordinator_ = std::jthread([this, numProducts](std::stop_token sToken){
+
+        while (this->workers_.size() != numProducts) {
+            // Wait until all workers are created
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::cout << "Waiting..." << std::endl;
+        }
+
+        std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
+        std::chrono::system_clock::time_point tpNext = tpNow + std::chrono::seconds(5);
+
         while (!sToken.stop_requested()) {
-            // Sleep for a while
-            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+            // Sleep until next timestamp capture
+            std::this_thread::sleep_until(tpNext);
+            tpNow = tpNext;
+            tpNext = tpNow + std::chrono::seconds(5);
 
-            // Do his job: update timestamp
-            std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
+            // // Do his job: update timestamp
             this->timestamp_ = std::chrono::duration_cast<std::chrono::seconds>(tpNow.time_since_epoch()).count();
-
+            
             // Signal workers to resume their job
-            this->pendingWork_.release(this->workers_.size());
+            this->pendingWork_.release(numProducts);
         }
     });
 
