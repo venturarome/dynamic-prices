@@ -26,7 +26,6 @@ PriceRecorder::PriceRecorder(std::shared_ptr<Menu> menu): pendingWork_{0} {
         while (this->workers_.size() != numProducts) {
             // Wait until all workers are created
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            std::cout << "Waiting..." << std::endl;
         }
 
         std::chrono::system_clock::time_point tpNow = std::chrono::system_clock::now();
