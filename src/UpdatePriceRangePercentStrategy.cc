@@ -4,9 +4,17 @@
 #include "Product.h"
 #include "Updatable.h"
 
+UpdatePriceRangePercentStrategy::UpdatePriceRangePercentStrategy(
+    float percentUp, float percentDown
+): percentUp_(percentUp), percentDown_(percentDown) {}
+
 void UpdatePriceRangePercentStrategy::update(Updatable& updatable, const Order& order) const {
     Product& product = dynamic_cast<Product&>(updatable);
-    product.ticker() == order.productTicker()
-        ? product.increasePriceRangePercentage()
-        : product.decreasePriceRangePercentage();
+    if (product.tickerIs(order.productTicker())) {
+        product.updateStock(-1);
+        product.increasePriceRangePercentage(this->percentUp_);
+    }
+    else {
+        product.decreasePriceRangePercentage(this->percentDown_);
+    }
 }
